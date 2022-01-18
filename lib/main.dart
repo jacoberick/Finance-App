@@ -12,10 +12,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter App',
-        home: MyHomePage());
+        title: 'Personal Expenses',
+        theme: ThemeData(
+          primarySwatch: Colors.teal,
+        ),
+        home: const MyHomePage());
   }
 }
 
@@ -84,7 +87,6 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(
               width: double.infinity,
               child: Card(
-                color: Colors.blue,
                 child: Text('Hi there.'),
               ),
             ),
