@@ -17,6 +17,20 @@ class MyApp extends StatelessWidget {
         title: 'Personal Expenses',
         theme: ThemeData(
           primarySwatch: Colors.teal,
+          fontFamily: 'Quicksand',
+          textTheme: const TextTheme(
+            headline6: TextStyle(
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.bold,
+                fontSize: 18),
+          ),
+          appBarTheme: const AppBarTheme(
+            titleTextStyle: TextStyle(
+              fontFamily: 'OpenSans',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
         home: const MyHomePage());
   }
@@ -70,7 +84,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter App'),
+        title: const Text(
+          'Personal Expenses',
+          style: TextStyle(fontFamily: 'Open Sans'),
+        ),
         actions: [
           IconButton(
             onPressed: () {
