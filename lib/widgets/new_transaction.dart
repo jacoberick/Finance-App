@@ -6,7 +6,7 @@ class NewTransaction extends StatefulWidget {
   const NewTransaction(this.addTx, {Key? key}) : super(key: key);
 
   @override
-  State<NewTransaction> createState() => _NewTransactionState();
+  _NewTransactionState createState() => _NewTransactionState();
 }
 
 class _NewTransactionState extends State<NewTransaction> {
@@ -20,13 +20,14 @@ class _NewTransactionState extends State<NewTransaction> {
 
     if (enteredTitle.isEmpty || enteredAmount <= 0) {
       return;
-    } else {
-      widget.addTx(
-        enteredTitle,
-        enteredAmount,
-      );
-      Navigator.of(context).pop();
     }
+
+    widget.addTx(
+      enteredTitle,
+      enteredAmount,
+    );
+
+    Navigator.of(context).pop();
   }
 
   @override
@@ -41,13 +42,17 @@ class _NewTransactionState extends State<NewTransaction> {
             TextField(
               decoration: const InputDecoration(labelText: 'Title'),
               controller: titleController,
+              onSubmitted: (_) => submitData(),
+              // onChanged: (val) {
+              //   titleInput = val;
+              // },
             ),
             TextField(
               decoration: const InputDecoration(labelText: 'Amount'),
               controller: amountController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: TextInputType.number,
               onSubmitted: (_) => submitData(),
+              // onChanged: (val) => amountInput = val,
             ),
             TextButton(
               child: const Text('Add Transaction'),
