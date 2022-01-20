@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import './widgets/new_transaction.dart';
@@ -65,36 +68,6 @@ class _MyHomePageState extends State<MyHomePage> {
       amount: 69.99,
       date: DateTime.now(),
     ),
-    Transaction(
-      id: 't2',
-      title: 'Weekly Groceries',
-      amount: 16.53,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't1',
-      title: 'New Shoes',
-      amount: 69.99,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Weekly Groceries',
-      amount: 16.53,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't1',
-      title: 'New Shoes',
-      amount: 69.99,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Weekly Groceries',
-      amount: 16.53,
-      date: DateTime.now(),
-    ),
   ];
 
   bool _showChart = false;
@@ -146,31 +119,44 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
-    final appBar = AppBar(
-      title: const Text(
-        'Personal Expenses',
-      ),
-      actions: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.add),
-          onPressed: () => _startAddNewTransaction(context),
-        ),
-      ],
-    );
+    final mediaQuery = MediaQuery.of(context);
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
+
+    final ObstructingPreferredSizeWidget appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: const Text('Personal Expenses'),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () => _startAddNewTransaction(context),
+                  child: const Icon(CupertinoIcons.add),
+                )
+              ],
+            ),
+          )
+        : AppBar(
+            title: const Text(
+              'Personal Expenses',
+            ),
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () => _startAddNewTransaction(context),
+              ),
+            ],
+          ) as ObstructingPreferredSizeWidget;
 
     final txListWidget = SizedBox(
-      height: (MediaQuery.of(context).size.height -
+      height: (mediaQuery.size.height -
               appBar.preferredSize.height -
-              MediaQuery.of(context).padding.top) *
+              mediaQuery.padding.top) *
           0.7,
       child: TransactionList(_userTransactions, _deleteTransaction),
     );
 
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(
+    final pageBody = SafeArea(
+      child: SingleChildScrollView(
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -180,8 +166,12 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('ShowChart'),
-                  Switch(
+                  Text(
+                    'ShowChart',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  Switch.adaptive(
+                      activeColor: Theme.of(context).colorScheme.secondary,
                       value: _showChart,
                       onChanged: (val) {
                         setState(() {
@@ -193,19 +183,18 @@ class _MyHomePageState extends State<MyHomePage> {
             // ignore: sdk_version_ui_as_code
             if (!isLandscape)
               SizedBox(
-                height: (MediaQuery.of(context).size.height -
+                height: (mediaQuery.size.height -
                         appBar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
+                        mediaQuery.padding.top) *
                     .3,
                 child: Chart(_recentTransactions),
               ),
             // ignore: sdk_version_ui_as_code
-            if (!isLandscape) txListWidget,
             _showChart
                 ? SizedBox(
-                    height: (MediaQuery.of(context).size.height -
+                    height: (mediaQuery.size.height -
                             appBar.preferredSize.height -
-                            MediaQuery.of(context).padding.top) *
+                            mediaQuery.padding.top) *
                         .7,
                     child: Chart(_recentTransactions),
                   )
@@ -213,11 +202,24 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () => _startAddNewTransaction(context),
-      ),
     );
+
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: pageBody,
+            navigationBar: appBar,
+          )
+        : Scaffold(
+            appBar: appBar,
+            body: pageBody,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: Platform.isIOS
+                ? null
+                : FloatingActionButton(
+                    child: const Icon(Icons.add),
+                    onPressed: () => _startAddNewTransaction(context),
+                  ),
+          );
   }
 }
