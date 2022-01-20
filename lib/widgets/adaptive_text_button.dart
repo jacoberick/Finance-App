@@ -6,7 +6,7 @@ class AdaptiveTextButton extends StatelessWidget {
   final String text;
   final VoidCallback handler;
 
-  const AdaptiveTextButton(this.text, this.handler, {Key? key})
+  const AdaptiveTextButton(this.text, this.handler, {Key key})
       : super(key: key);
 
   @override

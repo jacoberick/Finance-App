@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class NewTransaction extends StatefulWidget {
   final Function addTx;
 
-  const NewTransaction(this.addTx, {Key? key}) : super(key: key);
+  const NewTransaction(this.addTx, {Key key}) : super(key: key);
 
   @override
   _NewTransactionState createState() => _NewTransactionState();
@@ -14,7 +14,7 @@ class NewTransaction extends StatefulWidget {
 class _NewTransactionState extends State<NewTransaction> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
-  DateTime? _selectedDate;
+  DateTime _selectedDate;
 
   void _submitData() {
     if (_amountController.text.isEmpty) {
@@ -88,7 +88,7 @@ class _NewTransactionState extends State<NewTransaction> {
                       child: Text(
                         _selectedDate == null
                             ? 'No Date Chosen!'
-                            : 'Picked date ${DateFormat.yMd().format(_selectedDate as DateTime)}',
+                            : 'Picked date ${DateFormat.yMd().format(_selectedDate)}',
                       ),
                     ),
                     AdaptiveTextButton('Choose Date', _presentDatePicker)

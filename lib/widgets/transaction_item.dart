@@ -4,9 +4,9 @@ import '../models/transaction.dart';
 
 class TransactionItem extends StatelessWidget {
   const TransactionItem({
-    Key? key,
-    required this.transaction,
-    required this.deleteTx,
+    Key key,
+    this.transaction,
+    this.deleteTx,
   }) : super(key: key);
 
   final Transaction transaction;
