@@ -1,11 +1,13 @@
-import './adaptive_text_button.dart';
+import 'package:flutter_complete_guide/widgets/adaptive_flat_button.dart';
+
+import './adaptive_flat_button.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addTx;
 
-  const NewTransaction(this.addTx, {Key key}) : super(key: key);
+  const NewTransaction(this.addTx, {Key? key}) : super(key: key);
 
   @override
   _NewTransactionState createState() => _NewTransactionState();
@@ -14,7 +16,7 @@ class NewTransaction extends StatefulWidget {
 class _NewTransactionState extends State<NewTransaction> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
-  DateTime _selectedDate;
+  var _selectedDate;
 
   void _submitData() {
     if (_amountController.text.isEmpty) {
@@ -91,7 +93,7 @@ class _NewTransactionState extends State<NewTransaction> {
                             : 'Picked date ${DateFormat.yMd().format(_selectedDate)}',
                       ),
                     ),
-                    AdaptiveTextButton('Choose Date', _presentDatePicker)
+                    AdaptiveFlatButton('Choose Date', _presentDatePicker)
                   ],
                 ),
               ),

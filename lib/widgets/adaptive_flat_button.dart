@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io';
 
-class AdaptiveTextButton extends StatelessWidget {
+class AdaptiveFlatButton extends StatelessWidget {
   final String text;
   final VoidCallback handler;
 
-  const AdaptiveTextButton(this.text, this.handler, {Key key})
+  const AdaptiveFlatButton(this.text, this.handler, {Key? key})
       : super(key: key);
 
   @override

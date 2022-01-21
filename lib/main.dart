@@ -13,12 +13,10 @@ void main() {
   //   DeviceOrientation.portraitUp,
   //   DeviceOrientation.portraitUp,
   // ]);
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -41,20 +39,18 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const MyHomePage());
+        home: MyHomePage());
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key key}) : super(key: key);
-
   // String titleInput;
   // String amountInput;
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   final List<Transaction> _userTransactions = [
     // Transaction(
     //   id: 't1',
@@ -75,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return _userTransactions.where((tx) {
       return tx.date.isAfter(
         DateTime.now().subtract(
-          const Duration(days: 7),
+          Duration(days: 7),
         ),
       );
     }).toList();
@@ -98,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _startAddNewTransaction(BuildContext ctx) {
     showModalBottomSheet(
       context: ctx,
-      builder: (_) {
+      builder: (context) {
         return GestureDetector(
           onTap: () {},
           child: NewTransaction(_addNewTransaction),
@@ -116,14 +112,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Widget> _buildLandscapeContent(
     MediaQueryData mediaQuery,
-    AppBar appBar,
+    ObstructingPreferredSizeWidget appBar,
     Widget txListWidget,
   ) {
     return [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text('Show Chart', style: Theme.of(context).textTheme.headline6),
+          Text(
+            'Show Chart',
+            style: Theme.of(context).textTheme.headline6,
+          ),
           Switch.adaptive(
             value: _showChart,
             onChanged: (val) {
@@ -135,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       _showChart
-          ? SizedBox(
+          ? Container(
               height: (mediaQuery.size.height -
                       appBar.preferredSize.height -
                       mediaQuery.padding.top) *
@@ -148,11 +147,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Widget> _buildPortraitContent(
     MediaQueryData mediaQuery,
-    AppBar appBar,
+    ObstructingPreferredSizeWidget appBar,
     Widget txListWidget,
   ) {
     return [
-      SizedBox(
+      Container(
         height: (mediaQuery.size.height -
                 appBar.preferredSize.height -
                 mediaQuery.padding.top) *
@@ -163,37 +162,43 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    final isLandscape = mediaQuery.orientation == Orientation.landscape;
-    final PreferredSizeWidget appBar = Platform.isIOS
+  Widget _buildAppBar() {
+    return Platform.isIOS
         ? CupertinoNavigationBar(
-            middle: const Text(
+            middle: Text(
               'Personal Expenses',
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 GestureDetector(
-                  child: const Icon(CupertinoIcons.add),
+                  child: Icon(CupertinoIcons.add),
                   onTap: () => _startAddNewTransaction(context),
                 ),
               ],
             ),
           )
         : AppBar(
-            title: const Text(
+            title: Text(
               'Personal Expenses',
             ),
             actions: <Widget>[
               IconButton(
-                icon: const Icon(Icons.add),
+                icon: Icon(Icons.add),
                 onPressed: () => _startAddNewTransaction(context),
               ),
             ],
           );
-    final txListWidget = SizedBox(
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print('build() MyHomePageState');
+    final mediaQuery = MediaQuery.of(context);
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
+    final ObstructingPreferredSizeWidget appBar =
+        _buildAppBar() as ObstructingPreferredSizeWidget;
+    final txListWidget = Container(
       height: (mediaQuery.size.height -
               appBar.preferredSize.height -
               mediaQuery.padding.top) *
@@ -235,7 +240,7 @@ class _MyHomePageState extends State<MyHomePage> {
             floatingActionButton: Platform.isIOS
                 ? Container()
                 : FloatingActionButton(
-                    child: const Icon(Icons.add),
+                    child: Icon(Icons.add),
                     onPressed: () => _startAddNewTransaction(context),
                   ),
           );
